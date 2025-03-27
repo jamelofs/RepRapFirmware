@@ -15,7 +15,7 @@ NETWORK ?= WIFI
 TMC22XX ?= true
 TMC51XX ?= true
 
-GCC_PATH ?=
+GCC_PATH :=
 
 STARTUP_DELAY ?= -DSTARTUP_DELAY=10000
 
@@ -136,7 +136,7 @@ coreSTM: $(BUILD_DIR)/core.a
 
 $(BUILD_DIR)/libSTMCore.a: $(CORE_OBJS)
 	$(V)$(AR) rcs $@ $(CORE_OBJS)
-	@echo "\nBuilt STMCore\n"
+	@echo \nBuilt STMCore\n"
 	
 $(BUILD_DIR)/libRRFLibraries.a: $(RRFLIBRARIES_OBJS)
 	$(V)$(AR) rcs $@ $(RRFLIBRARIES_OBJS)

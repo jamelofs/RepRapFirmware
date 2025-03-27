@@ -34,7 +34,7 @@ constexpr uint32_t IAP_IMAGE_START = 0x20018000;	// IAP is loaded into the last 
 
 // Features definition
 #define HAS_LWIP_NETWORKING		0
-
+# define USE_SBC			1
 #if defined(USE_SBC)
 # define HAS_WIFI_NETWORKING	0
 # define HAS_W5500_NETWORKING	0

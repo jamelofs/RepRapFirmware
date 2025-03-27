@@ -634,7 +634,7 @@ static bool LoadBoardDefaults() noexcept
         SafeSnprintf(iapFirmwareFile, sizeof(iapFirmwareFile), "firmware_%s.bin", BoardName);
         InitDiagPin();
         // for now ignore settings in boot file
-        NetworkModule = NetworkModuleType::espauto;
+        //NetworkModule = NetworkModuleType::espauto;
         return true;
     }
     return false;

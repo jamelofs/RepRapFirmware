@@ -816,13 +816,13 @@ const MacAddress& Network::GetMacAddress(unsigned int interface) const noexcept
 bool Network::FindResponder(Socket *skt, NetworkProtocol protocol) noexcept
 {
 #if HAS_RESPONDERS
-	for (NetworkResponder *r = responders; r != nullptr; r = r->GetNext())
-	{
-		if (r->Accept(skt, protocol))
-		{
-			return true;
-		}
-	}
+	// for (NetworkResponder *r = responders; r != nullptr; r = r->GetNext())
+	// {
+	// 	if (r->Accept(skt, protocol))
+	// 	{
+	// 		return true;
+	// 	}
+	// }
 #endif
 	return false;
 }

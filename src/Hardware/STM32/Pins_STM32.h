@@ -4,9 +4,9 @@
 #include "sd_mmc.h"
 #include "NVMEmulation.h"
 
-#if !defined(COMBINEDFW)
-# error "unsupported network build options"
-#endif
+// #if !defined(COMBINEDFW)
+// # error "unsupported network build options"
+// #endif
 
 #ifndef UNUSED
 #define UNUSED(x) (void)(x)
@@ -103,13 +103,13 @@ constexpr size_t NumFirmwareUpdateModules = 5;        // 3 modules, plus one for
 
 
 #define HAS_RTOSPLUSTCP_NETWORKING       0
-#define HAS_WIFI_NETWORKING              1
+#define HAS_WIFI_NETWORKING              0
 #define HAS_MASS_STORAGE                 1
 #define SUPPORT_TELNET                   0
 #define HAS_SBC_INTERFACE                1
-#define SUPPORT_MQTT                     1
+#define SUPPORT_MQTT                     0
 #define SUPPORT_FTP                      1
-#define SUPPORT_ACCELEROMETERS           1
+#define SUPPORT_ACCELEROMETERS           0
 #define HAS_WRITER_TASK                  1
 
 
