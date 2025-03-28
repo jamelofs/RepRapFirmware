@@ -68,13 +68,13 @@ FLAGS  = -D__$(PROCESSOR)__ -D_XOPEN_SOURCE -DSTM32 -DSTM32MP1 -DSTM32MP1xx -DST
 #FLAGS  = -D__$(PROCESSOR)__ -D_XOPEN_SOURCE -DSTM32F4 -DSTM32F429xx -DSTM32F40_41xxx -DSTM32F407_5ZX -DSTM32F4xx
 # UART configuration
 FLAGS  += -DHAVE_HWSERIAL1 -DHAVE_HWSERIAL2 -DHAVE_HWSERIAL3 -DHAVE_HWSERIAL4 -DHAVE_HWSERIAL5 -DHAVE_HWSERIAL6 -DUSB_CDC_USE_DTR
-FLAGS  += -DUSE_UART0=1 -DUSE_UART1=1 -DUSE_UART2=1 -DSUPPORT_USB=1
+FLAGS  += -DUSE_UART0=1 -DUSE_UART1=1 -DUSE_UART2=1 #-DSUPPORT_USB=1
 # SPI configuration
-FLAGS  += -DUSE_SSP1=1 -DUSE_SSP2=1 -DUSE_SSP3=1 -DUSE_SWSPI=1
+# FLAGS  += -DUSE_SSP1=1 -DUSE_SSP2=1 -DUSE_SSP3=1 -DUSE_SWSPI=1
 # SDIO configuration
 FLAGS  += -DUSE_SDIO=1
 # General configuration
-FLAGS += -DRTOS -DFREERTOS_USED -DUSBCON -DUSBD_USE_CDC -DUSB_PRODUCT=\"RepRapFirmware\" -DVECT_TAB_OFFSET=0x8000
+FLAGS += -DRTOS -DFREERTOS_USED #-DUSBCON -DUSBD_USE_CDC -DUSB_PRODUCT=\"RepRapFirmware\" -DVECT_TAB_OFFSET=0x8000
 FLAGS += -DHAL_RRF=1 -DFORCE_ESTACK=1 -DSUPPORT_CAN=1
 FLAGS +=  -Wall -c -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee -mcpu=cortex-m4 -mthumb -fno-math-errno -ffunction-sections -fdata-sections
 FLAGS += -nostdlib -Wdouble-promotion -fsingle-precision-constant -fstack-usage
@@ -83,7 +83,7 @@ FLAGS += -nostdlib -Wdouble-promotion -fsingle-precision-constant -fstack-usage
 FLAGS += $(DEBUG_FLAGS)
 FLAGS += -MMD -MP 
 FLAGS += -DSTM32MP157 -DSTM32MP157xx
-FLAGS += -DCORE_CM4
+FLAGS += -DCORE_CM4 -DUSE_FULL_LL_DRIVER
 
 ifeq ($(NETWORK), WIFI)
         $(info - Networking: ESP WIFI) 
