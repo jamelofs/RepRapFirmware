@@ -36,7 +36,7 @@ static void FlashClearError()
 	__HAL_FLASH_CLEAR_FLAG_BANK2((FLASH_FLAG_WRPERR_BANK2 | FLASH_FLAG_PGSERR_BANK2 | FLASH_FLAG_STRBERR_BANK2 | \
 									FLASH_FLAG_INCERR_BANK2 | FLASH_FLAG_SNECCERR_BANK2 | FLASH_IT_DBECCERR_BANK2) & 0x7FFFFFFFU);
 #endif
-#else
+#elif !defined(__STM32MP1__)
 	__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |\
 							FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR| FLASH_FLAG_PGSERR);
 #endif
@@ -45,6 +45,7 @@ static void FlashClearError()
 
 static bool isErased(const uint32_t addr, const size_t len) noexcept
 {
+	#ifndef __STM32MP1__
 #if STM32H7
     // On the STM32H7 if the flash has not been correctly erased then simply reading
     // it can cause a bus fault (due to multiple ECC errors). We avoid this by disaabling
@@ -80,11 +81,13 @@ static bool isErased(const uint32_t addr, const size_t len) noexcept
 	__ISB();
 	IrqRestore(flags);
 #endif
-	return blank;
+#endif
+	return true;
 }
 
 static uint32_t FlashGetSector(const uint32_t addr) noexcept
 {
+	#ifndef __STM32MP1__
 	if (!IS_FLASH_PROGRAM_ADDRESS(addr))
 	{
 		debugPrintf("Bad flash address %x\n", (unsigned)addr);
@@ -103,6 +106,8 @@ static uint32_t FlashGetSector(const uint32_t addr) noexcept
 	else
 		return offset / 0x20000 + 4;
 #endif
+#endif
+return 0;
 }
 
 #if 0
@@ -124,8 +129,10 @@ static size_t FlashGetSectorLength(const uint32_t addr) noexcept
 }
 #endif
 
+
 static bool FlashEraseSector(const uint32_t sector) noexcept
 {
+	#ifndef __STM32MP1__
 	WatchdogReset();
 	FLASH_EraseInitTypeDef eraseInfo;
 	uint32_t SectorError;
@@ -159,10 +166,13 @@ static bool FlashEraseSector(const uint32_t sector) noexcept
 	if (!ret)
 		debugPrintf("Flash erase failed sector %d error %x\n", (int)sector, (unsigned)SectorError);
 	return ret;
+	#endif
+	return 0;
 }
 
 static bool FlashWrite(const uint32_t addr, const uint8_t *data, const size_t len) noexcept
 {
+	#ifndef __STM32MP1__
 	uint32_t *dst = (uint32_t *)addr;
 	uint32_t *src = (uint32_t *)data;
 	if (!IS_FLASH_ALIGNED(dst) || !IS_ALIGNED(src) || !IS_ALIGNED(len))
@@ -207,10 +217,13 @@ static bool FlashWrite(const uint32_t addr, const uint8_t *data, const size_t le
 		debugPrintf("Flash write failed cnt %d\n", (int)((int)dst - addr));
 
 	return ret; 
+	#endif
+	return 0;
 }
 
 static bool FlashRead(const uint32_t addr, uint8_t *data, const size_t len) noexcept
 {
+#ifndef __STM32MP1__
 #if STM32H7
     // On the STM32H7 if the flash has not been correctly erased then simply reading
     // it can cause a bus fault (due to multiple ECC errors). We avoid this by disaabling
@@ -236,6 +249,7 @@ static bool FlashRead(const uint32_t addr, uint8_t *data, const size_t len) noex
 	__DSB();
 	__ISB();
 	IrqRestore(flags);
+#endif
 #endif
     return true;
 }
@@ -267,6 +281,7 @@ bool IsSlotVacant(uint8_t slot)
 
 void NVMEmulationRead(void *data, uint32_t dataLength)
 {
+	#ifndef __STM32MP1__
     // find the most recently written data or slot 0 if all free
     currentSlot = MAX_SLOT;
     while (currentSlot > 0 && IsSlotVacant(currentSlot))
@@ -274,6 +289,7 @@ void NVMEmulationRead(void *data, uint32_t dataLength)
     uint32_t *slotStartAddress = GetSlotPtr(currentSlot);
 
     FlashRead((const uint32_t)slotStartAddress, (uint8_t *)data, dataLength);
+	#endif
 }
 
 bool NVMEmulationErase()
@@ -319,8 +335,9 @@ bool NVMEmulationWrite(const void *data, uint32_t dataLength){
         currentSlot = 0;
     }
 #endif
-
+#ifndef __STM32MP1__
     FlashWrite((uint32_t)GetSlotPtr(currentSlot), (const uint8_t*)data, dataLength);
-    return true;  
+#endif
+	return true;  
 }
 

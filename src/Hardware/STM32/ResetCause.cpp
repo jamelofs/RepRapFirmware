@@ -7,6 +7,18 @@ static ResetCause_t ResetCause = RESET_CAUSE_UNKNOWN;
 
 void InitResetCause() noexcept
 {
+#ifdef __STM32MP1__
+if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST))
+    {
+        ResetCause = RESET_CAUSE_POWER_ON_POWER_DOWN_RESET;
+    }
+    // Needs to come *after* checking the `RCC_FLAG_PORRST` flag in order to ensure first that the reset cause is 
+    // NOT a POR/PDR reset. See note below. 
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_BORRST))
+    {
+        ResetCause = RESET_CAUSE_BROWNOUT_RESET;
+    }
+#else
 #if STM32H7
     if (__HAL_RCC_GET_FLAG(RCC_FLAG_LPWR1RST))
     {
@@ -52,6 +64,7 @@ void InitResetCause() noexcept
     {
         ResetCause = RESET_CAUSE_EXTERNAL_RESET_PIN_RESET;
     }
+    #endif
     else
     {
         ResetCause = RESET_CAUSE_UNKNOWN;

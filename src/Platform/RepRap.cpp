@@ -554,8 +554,12 @@ void RepRap::Init() noexcept
 	NVIC_ClearPendingIRQ(WDT_IRQn);
 	NVIC_EnableIRQ(WDT_IRQn);														// enable the watchdog early warning interrupt
 #elif STM32
-	NVIC_SetPriority(WWDG_IRQn, NvicPriorityWatchdog);								// set priority for watchdog interrupts
-	WatchdogInit();
+#ifdef __STM32MP1__
+NVIC_SetPriority(WWDG1_IRQn, NvicPriorityWatchdog);								// set priority for watchdog interrupts
+#else
+NVIC_SetPriority(WWDG_IRQn, NvicPriorityWatchdog);								// set priority for watchdog interrupts
+#endif
+WatchdogInit();
 #else
 	{
 		// The clock frequency for both watchdogs is about 32768/128 = 256Hz
@@ -2696,7 +2700,7 @@ void RepRap::PrepareToLoadIap() noexcept
 #if STM32 && HAS_SBC_INTERFACE
 	BoardConfig::InvalidateBoardConfiguration();
 #endif
-	serialUSB.end();
+	SERIAL_MAIN_DEVICE.end();
 	StopUsbTask();
 
 	Cache::Disable();						// disable the cache because it interferes with flash memory access

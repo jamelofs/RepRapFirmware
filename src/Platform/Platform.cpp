@@ -42,6 +42,7 @@
 #include <Hardware/I2C.h>
 #include <Hardware/NonVolatileMemory.h>
 #include <Storage/CRC32.h>
+#include <General/RingBuffer.h>
 #include <Accelerometers/Accelerometers.h>
 #if STM32
 using LegacyAnalogIn::AdcBits;
@@ -1182,6 +1183,7 @@ void Platform::Spin() noexcept
 	(void)FlushMessages();
 
 #if STM32
+#ifndef __STM32MP1__
 	// Update the VRef reference correction
 	// See: http://www.efton.sk/STM32/STM32_VREF.pdf and https://www.st.com/resource/en/datasheet/dm00037051.pdf
 	// We get current VRef to compensate reading.
@@ -1190,6 +1192,7 @@ void Platform::Spin() noexcept
 	{
 		vRefCorrection = (GET_ADC_CAL(VREFINT_CAL_ADDR, VREFINT_CAL_DEF)*VRefCorrectionScale)/((adcFilters[VrefFilterIndex].GetSum() >> (AdcBits - 12))/ThermistorAverageReadings);
 	}
+#endif
 #endif
 
 	// Check the MCU max and min temperatures
@@ -1753,6 +1756,7 @@ void Platform::InitialiseInterrupts() noexcept
 #endif
 
 #if STM32
+#ifndef __STM32MP1__
     NVIC_SetPriority(EXTI0_IRQn, NvicPriorityPins);
     NVIC_SetPriority(EXTI1_IRQn, NvicPriorityPins);
     NVIC_SetPriority(EXTI2_IRQn, NvicPriorityPins);
@@ -1761,6 +1765,7 @@ void Platform::InitialiseInterrupts() noexcept
     NVIC_SetPriority(EXTI9_5_IRQn, NvicPriorityPins);
     NVIC_SetPriority(EXTI15_10_IRQn, NvicPriorityPins);
     NVIC_SetPriority(TIM7_IRQn, NvicPriorityTimerPWM);  	//Timer 7 runs Software PWM
+#endif
 #elif SAME5x
 	SetInterruptPriority(EIC_0_IRQn, 16, NvicPriorityPins);				// SAME5x EXINT has 16 contiguous IRQ numbers
 #else
@@ -1787,6 +1792,7 @@ void Platform::InitialiseInterrupts() noexcept
 	NVIC_SetPriority(OTG_FS_IRQn, NvicPriorityUSB);
 #elif STM32H723xx
 	NVIC_SetPriority(OTG_HS_IRQn, NvicPriorityUSB);
+#elif __STM32MP1__
 #else
 # error Unsupported processor
 #endif
@@ -4153,6 +4159,8 @@ void Platform::SetBoardType() noexcept
 	board = BoardType::Stm32F4;
 #elif defined(__STM32H7__)
 	board = BoardType::Stm32H7;
+#elif defined(__STM32MP1__)
+	board = BoardType::Stm32MP1;
 #else
 # error Undefined board type
 #endif

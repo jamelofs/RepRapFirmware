@@ -31,6 +31,9 @@
 #if STM32H7
 # include "stm32h7xx_ll_system.h"
 # include "core_cm7.h"
+#elif STM32MP1
+# include "stm32mp1xx_ll_system.h"
+# include "core_cm4.h"
 #else
 # include "stm32f4xx_ll_system.h"
 # include "core_cm4.h"
@@ -634,7 +637,9 @@ static bool LoadBoardDefaults() noexcept
         SafeSnprintf(iapFirmwareFile, sizeof(iapFirmwareFile), "firmware_%s.bin", BoardName);
         InitDiagPin();
         // for now ignore settings in boot file
+#ifndef __STM32MP1__
         NetworkModule = NetworkModuleType::espauto;
+#endif
         return true;
     }
     return false;

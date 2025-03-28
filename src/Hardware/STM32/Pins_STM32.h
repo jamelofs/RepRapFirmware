@@ -44,7 +44,7 @@
 # endif
 #else
 # define FIRMWARE_NAME "RepRapFirmware for STM32F4 based Boards"
-# define DEFAULT_BOARD_TYPE BoardType::Stm32F4
+# define DEFAULT_BOARD_TYPE BoardType::Auto
 # define SUPPORT_CAN_EXPANSION       1
 # define DUAL_CAN                    0
 # define SUPPORT_SPICAN              1
@@ -62,8 +62,9 @@
 #define FIRMWARE_FILE       "0:/firmware.bin"
 
 // Firmware to be loaded onto the ESP board
+#ifndef __STM32MP1__
 #define WIFI_FIRMWARE_FILE  (ModuleFiles[NetworkModule.ToBaseType()])
-
+#endif
 
 constexpr size_t NumFirmwareUpdateModules = 5;        // 3 modules, plus one for manual upload to WiFi module (module 2 is now unused)
 
@@ -101,7 +102,7 @@ constexpr size_t NumFirmwareUpdateModules = 5;        // 3 modules, plus one for
 #define BOARD_SHORT_NAME                 (BoardName)
 #define IAP_FIRMWARE_FILE                (iapFirmwareFile)
 
-
+#ifndef __STM32MP1__
 #define HAS_RTOSPLUSTCP_NETWORKING       0
 #define HAS_WIFI_NETWORKING              1
 #define HAS_MASS_STORAGE                 1
@@ -111,6 +112,7 @@ constexpr size_t NumFirmwareUpdateModules = 5;        // 3 modules, plus one for
 #define SUPPORT_FTP                      1
 #define SUPPORT_ACCELEROMETERS           1
 #define HAS_WRITER_TASK                  1
+#endif
 
 
 // The physical capabilities of the machine
@@ -330,8 +332,11 @@ extern Pin AuxSerialRxTxPins[NumberSerialPins];
     extern Pin Aux2SerialRxTxPins[NumberSerialPins];
 #endif
 
+#ifdef __STM32MP1__
+#define SERIAL_MAIN_DEVICE  UART_Slot0  //Default to ST-Link Serial
+#else
 #define SERIAL_MAIN_DEVICE  serialUSB  //USB
-
+#endif
 
 #if HAS_WIFI_NETWORKING
     NamedEnum(NetworkModuleType, uint8_t,

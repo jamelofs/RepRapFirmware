@@ -27,7 +27,11 @@ enum configValueType{
     cvModuleType
 };
 
+#ifdef __STM32MP1__
+const uint32_t CVTLengths[] = {sizeof(Pin), sizeof(bool), sizeof(uint8_t), sizeof(uint16_t), sizeof(uint32_t), sizeof(float), MaxBoardNameLength, sizeof(DriverType), 0};
+#else
 const uint32_t CVTLengths[] = {sizeof(Pin), sizeof(bool), sizeof(uint8_t), sizeof(uint16_t), sizeof(uint32_t), sizeof(float), MaxBoardNameLength, sizeof(DriverType), sizeof(NetworkModuleType)};
+#endif
 
 struct boardConfigEntry_t
 {
