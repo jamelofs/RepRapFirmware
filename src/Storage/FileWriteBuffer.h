@@ -13,7 +13,7 @@
 #include <RTOSIface/RTOSIface.h>
 #endif
 
-#if SAM4E || SAM4S || SAME70 || SAME5x || STM32H7
+#if SAM4E || SAM4S || SAME70 || SAME5x || STM32H7 || __STM32MP1__
 constexpr size_t NumFileWriteBuffers = 2;					// Number of write buffers
 constexpr size_t FileWriteBufLen = 8192;					// Size of each write buffer
 constexpr size_t SbcFileWriteBufLen = 4192;					// Available size of each write buffer in SBC mode

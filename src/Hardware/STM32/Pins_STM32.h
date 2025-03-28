@@ -4,9 +4,9 @@
 #include "sd_mmc.h"
 #include "NVMEmulation.h"
 
-#if !defined(COMBINEDFW)
-# error "unsupported network build options"
-#endif
+// #if !defined(COMBINEDFW)
+// # error "unsupported network build options"
+// #endif
 
 #ifndef UNUSED
 #define UNUSED(x) (void)(x)

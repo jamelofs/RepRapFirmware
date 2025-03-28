@@ -141,6 +141,8 @@ enum class BoardType : uint8_t
 	Stm32F4 = 1
 #elif defined(__STM32H7__)
 	Stm32H7 = 1
+#elif defined(__STM32MP1__)
+	Stm32MP1 = 1
 #else
 # error Unknown board
 #endif

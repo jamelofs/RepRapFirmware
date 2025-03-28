@@ -4195,6 +4195,8 @@ const char *_ecv_array Platform::GetElectronicsString() const noexcept
 	case BoardType::Stm32F4:				return STM_ELECTRONICS_STRING;
 #elif defined(__STM32H7__)
 	case BoardType::Stm32H7:				return STM_ELECTRONICS_STRING;
+#elif defined(__STM32MP1__)
+	case BoardType::Stm32MP1:				return STM_ELECTRONICS_STRING;
 #else
 # error Undefined board type
 #endif
@@ -4238,6 +4240,8 @@ const char *_ecv_array Platform::GetBoardString() const noexcept
 	case BoardType::Stm32F4:				return STM_BOARD_STRING;
 #elif defined(__STM32H7__)
 	case BoardType::Stm32H7:				return STM_BOARD_STRING;
+#elif defined(__STM32MP1__)
+	case BoardType::Stm32MP1:				return STM_BOARD_STRING;
 #else
 # error Undefined board type
 #endif
