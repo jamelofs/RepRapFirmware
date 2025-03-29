@@ -586,7 +586,7 @@ void CommandProcessor::ProcessReceivedMessage(CanMessageBuffer *buf) noexcept
 				requestId = buf->msg.writeGpio.requestId;
 				rslt = reprap.GetPlatform().EutHandleGpioWrite(buf->msg.writeGpio, replyRef);
 				break;
-
+#ifndef __STM32MP1__
 			// LED strip commands
 			case CanMessageType::m950Led:
 				requestId = buf->msg.generic.requestId;
@@ -597,7 +597,7 @@ void CommandProcessor::ProcessReceivedMessage(CanMessageBuffer *buf) noexcept
 				requestId = buf->msg.generic.requestId;
 				rslt = reprap.GetPlatform().GetLedStripManager().HandleLedSetColours(buf->msg.generic, replyRef);
 				break;
-
+#endif
 			// Driver commands
 			case CanMessageType::setMotorCurrents:
 				requestId = buf->msg.multipleDrivesRequestFloat.requestId;

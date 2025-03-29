@@ -111,11 +111,11 @@ using AnalogIn::AdcBits;			// for compatibility with CoreNG, which doesn't have 
 
 #include <climits>
 
-#if !defined(HAS_LWIP_NETWORKING) || !defined(HAS_WIFI_NETWORKING) || !defined(HAS_CPU_TEMP_SENSOR) || !defined(HAS_HIGH_SPEED_SD) \
- || !defined(HAS_SMART_DRIVERS) || !defined(HAS_STALL_DETECT) || !defined(HAS_VOLTAGE_MONITOR) || !defined(HAS_12V_MONITOR) || !defined(HAS_VREF_MONITOR) \
- || !defined(SUPPORT_NONLINEAR_EXTRUSION) || !defined(SUPPORT_ASYNC_MOVES) || !defined(HAS_MASS_STORAGE) || !defined(HAS_EMBEDDED_FILES)
-# error Missing feature definition
-#endif
+// #if !defined(HAS_LWIP_NETWORKING) || !defined(HAS_WIFI_NETWORKING) || !defined(HAS_CPU_TEMP_SENSOR) || !defined(HAS_HIGH_SPEED_SD) \
+//  || !defined(HAS_SMART_DRIVERS) || !defined(HAS_STALL_DETECT) || !defined(HAS_VOLTAGE_MONITOR) || !defined(HAS_12V_MONITOR) || !defined(HAS_VREF_MONITOR) \
+//  || !defined(SUPPORT_NONLINEAR_EXTRUSION) || !defined(SUPPORT_ASYNC_MOVES) || !defined(HAS_MASS_STORAGE) || !defined(HAS_EMBEDDED_FILES)
+// # error Missing feature definition
+// #endif
 
 #if HAS_VOLTAGE_MONITOR
 
@@ -2911,10 +2911,15 @@ StandardDriverStatus Platform::GetLocalDriverStatus(size_t driver) const noexcep
 {
 #if defined(DUET3_MB6XD)
 	return StandardDriverStatus((HasDriverError(driver)) ? (uint32_t)1u << StandardDriverStatus::ExternDriverErrorBitPos : 0);
-#else
+#elif defined(HAS_SMART_DRIVERS)
 	return SmartDrivers::GetStatus(driver, false, false);		// it's safe to call this even when driver >= MaxSmartDrivers
+#else
+	StandardDriverStatus result;
+	result.all = 0;
+	return result;
 #endif
 }
+
 
 // Set drives to idle hold if they are enabled. If a drive is disabled, leave it alone.
 // Must not be called from an ISR, or with interrupts disabled.
@@ -5647,7 +5652,7 @@ void Platform::SendDriversStatus(CanMessageBuffer& buf) noexcept
 	{
 		msg->openLoopData[driver].status = SmartDrivers::GetStatus(driver, false, false).AsU32();
 	}
-# else
+# elif DUET3_MB6XD
 	msg->SetStandardFields(NumDirectDrivers, false);
 	for (size_t driver = 0; driver < NumDirectDrivers; ++driver)
 	{

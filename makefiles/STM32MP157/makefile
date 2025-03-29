@@ -8,12 +8,12 @@ RRFLIBRARIES_DIR ?= ./RRFLibraries
 CORESTM_DIR ?= ./CoreN2G
 CANLIB_DIR ?= CANlib
 OUTPUT_NAME ?= base_stm32mp157
-BUILD ?= Debug
+BUILD := 
 
 NETWORK ?= SBC
 
-TMC22XX ?= true
-TMC51XX ?= true
+# TMC22XX ?= true
+# TMC51XX ?= true
 
 GCC_PATH ?=
 
@@ -93,7 +93,7 @@ LDFLAGS += -Wl,--gc-sections,--relax -Wl,--entry=Reset_Handler -Wl,--unresolved-
 LDFLAGS += -Wl,--warn-unresolved-symbols -Wl,--defsym=LD_MAX_SIZE=1048576 -Wl,--defsym=LD_MAX_DATA_SIZE=196608 
 LDFLAGS += -Wl,--defsym=LD_FLASH_OFFSET=0x0 -Wl,--no-warn-rwx-segment -Wl,--start-group $(RRFLIBC_OBJS) 
 LDFLAGS += -lSTMCore $(RRF_OBJS) $(CANLIB_OBJS) -lRRFLibraries -larm_cortexM4l_math -lc -lm -lgcc -lstdc++ -Wl,--end-group
-LDFLAGS += -Xlinker --strip-all
+# LDFLAGS += -Xlinker --strip-all
 LDFLAGS += -Xlinker --print-memory-usage
 # LDFLAGS += -flto
 

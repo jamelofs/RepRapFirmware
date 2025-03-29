@@ -33,7 +33,7 @@ constexpr uint32_t IAP_IMAGE_START = 0x20028000;
 //#define HAS_CPU_TEMP_SENSOR	0					// according to the SAME5x errata doc, the temperature sensors don't work in revision A or D chips (revision D is latest as at 2020-06-28)
 #define HAS_CPU_TEMP_SENSOR		1					// enable this as an experiment - it may be better than nothing
 
-#define SUPPORT_TMC22xx			1
+// #define SUPPORT_TMC22xx			1
 #define SUPPORT_TMC2240			0
 #define HAS_STALL_DETECT		1
 

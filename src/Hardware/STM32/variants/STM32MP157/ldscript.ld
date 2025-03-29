@@ -47,10 +47,10 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
   RETRAM_interrupts (xrw)  : ORIGIN = 0x00000000,  LENGTH = 0x00000600
-  SRAM1_text        (xrw)  : ORIGIN = 0x10000000,  LENGTH = 128K
-  SRAM2_data        (xrw)  : ORIGIN = 0x10020000,  LENGTH = 128K
-  SRAM3_ipc_shm     (xrw)  : ORIGIN = 0x10040000,  LENGTH = 64K
-  SRAM4             (xrw)  : ORIGIN = 0x10050000,  LENGTH = 64K
+  SRAM1_text        (xrw)  : ORIGIN = 0x10000000,  LENGTH = 512K
+  SRAM2_data        (xrw)  : ORIGIN = 0x10080000,  LENGTH = 128K
+  SRAM3_ipc_shm     (xrw)  : ORIGIN = 0x10100000,  LENGTH = 64K
+  SRAM4             (xrw)  : ORIGIN = 0x10120000,  LENGTH = 64K
 }
 
 /* Symbols needed for OpenAMP to enable rpmsg */

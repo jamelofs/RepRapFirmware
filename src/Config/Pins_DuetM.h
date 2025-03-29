@@ -30,7 +30,7 @@ constexpr uint32_t IAP_IMAGE_START = 0x20018000;
 #define ENFORCE_MAX_VIN			0
 #define HAS_VREF_MONITOR		1
 
-#define SUPPORT_TMC22xx			1
+// #define SUPPORT_TMC22xx			1
 #define SUPPORT_TMC2208			1
 #define SUPPORT_TMC2209			0
 #define SUPPORT_TMC2240			0

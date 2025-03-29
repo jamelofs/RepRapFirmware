@@ -46,7 +46,7 @@ constexpr uint32_t IAP_IMAGE_START = 0x20010000;
 # define TMC2660_USES_USART		0
 #endif
 #if defined(PCCB_08)
-# define SUPPORT_TMC22xx		1
+// # define SUPPORT_TMC22xx		1
 # define TMC22xx_HAS_MUX		0
 #endif
 

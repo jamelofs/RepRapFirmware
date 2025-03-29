@@ -144,7 +144,7 @@
 # define SUPPORT_OBJECT_MODEL	0
 #endif
 
-#define HAS_SMART_DRIVERS		(SUPPORT_TMC2660 || SUPPORT_TMC22xx || SUPPORT_TMC51xx)
+// #define HAS_SMART_DRIVERS		(SUPPORT_TMC2660 || SUPPORT_TMC22xx || SUPPORT_TMC51xx)
 #ifndef HAS_STALL_DETECT
 # define HAS_STALL_DETECT		(SUPPORT_TMC2660 || SUPPORT_TMC51xx)
 #endif
@@ -263,27 +263,27 @@
 
 // Optional kinematics support, to allow us to reduce flash memory usage
 #ifndef SUPPORT_LINEAR_DELTA
-# define SUPPORT_LINEAR_DELTA	1
+# define SUPPORT_LINEAR_DELTA	0
 #endif
 
 #ifndef SUPPORT_ROTARY_DELTA
-# define SUPPORT_ROTARY_DELTA	1
+# define SUPPORT_ROTARY_DELTA	0
 #endif
 
 #ifndef SUPPORT_POLAR
-# define SUPPORT_POLAR			1
+# define SUPPORT_POLAR			0
 #endif
 
 #ifndef SUPPORT_SCARA
-# define SUPPORT_SCARA			1
+# define SUPPORT_SCARA			0
 #endif
 
 #ifndef SUPPORT_FIVEBARSCARA
-# define SUPPORT_FIVEBARSCARA	1
+# define SUPPORT_FIVEBARSCARA	0
 #endif
 
 #ifndef SUPPORT_HANGPRINTER
-# define SUPPORT_HANGPRINTER	1
+# define SUPPORT_HANGPRINTER	0
 #endif
 
 #ifndef BOARD_USES_UF2_BINARY

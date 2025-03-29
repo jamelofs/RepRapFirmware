@@ -42,6 +42,16 @@
 # else
 #  error "Processor undfined"
 # endif
+// #elif STM32MP1
+// # define FIRMWARE_NAME "RepRapFirmware for STM32MP1 based Boards"
+// # define DEFAULT_BOARD_TYPE BoardType::Auto
+// # define SUPPORT_CAN_EXPANSION       0
+// # define DUAL_CAN                    0
+// # define SUPPORT_SPICAN              10
+// # define FLASH_DATA_LENGTH (16*1024) //size of the Software Reset Data in Flash
+
+// # define STM_ELECTRONICS_STRING "STM32MP1"
+// # define STM_BOARD_STRING "STM32MP1"
 #else
 # define FIRMWARE_NAME "RepRapFirmware for STM32F4 based Boards"
 # define DEFAULT_BOARD_TYPE BoardType::Auto
@@ -80,23 +90,23 @@ constexpr size_t NumFirmwareUpdateModules = 5;        // 3 modules, plus one for
 #define SUPPORT_ROLAND                   0	// set nonzero to support Roland mill
 #define SUPPORT_SCANNER                  0	// set nonzero to support FreeLSS scanners
 #define SUPPORT_IOBITS                   0	// set to support P parameter in G0/G1 commands
-#define SUPPORT_DHT_SENSOR               1	// set nonzero to support DHT temperature/humidity sensors
+#define SUPPORT_DHT_SENSOR               0	// set nonzero to support DHT temperature/humidity sensors
 #define SUPPORT_WORKPLACE_COORDINATES    1
-#define SUPPORT_LASER                    1
+#define SUPPORT_LASER                    0
 
-#define HAS_ATX_POWER_MONITOR            1
+#define HAS_ATX_POWER_MONITOR            0
 
-#define SUPPORT_LED_STRIPS               1
-#define SUPPORT_BITBANG_NEOPIXEL         1
-#define SUPPORT_DMA_NEOPIXEL             1
-#define SUPPORT_ASYNC_MOVES              1
+#define SUPPORT_LED_STRIPS               0
+#define SUPPORT_BITBANG_NEOPIXEL         0
+#define SUPPORT_DMA_NEOPIXEL             0
+#define SUPPORT_ASYNC_MOVES              0
 #define ALLOCATE_DEFAULT_PORTS           0
 #define TRACK_OBJECT_NAMES               1
 #define HAS_DEFAULT_PSON_PIN             0
-#define SUPPORT_BME280                   1
-#define SUPPORT_12864_LCD                1
-#define SUPPORT_PROBE_POINTS_FILE        1
-#define SUPPORT_KEEPOUT_ZONES            1
+#define SUPPORT_BME280                   0
+#define SUPPORT_12864_LCD                0
+#define SUPPORT_PROBE_POINTS_FILE        0
+#define SUPPORT_KEEPOUT_ZONES            0
 #define HAS_EMBEDDED_CONFIG              1
 #define BOARD_NAME                       (BoardLongName)
 #define BOARD_SHORT_NAME                 (BoardName)

@@ -264,7 +264,9 @@ static void ClearConfig() noexcept
     LcdSpiChannel = SSPNONE;
     DiagOnPolarity = true;
     ActOnPolarity = true;
+#if HAS_SMART_DRIVERS
     SmartDriversSpiChannel = SSPNONE;
+#endif
 #if HAS_WIFI_NETWORKING
     SamCsPin = PB_12;
     WiFiSpiChannel = SSP2;
@@ -477,6 +479,7 @@ static void ConfigureSPIPins(SSPChannel dev, Pin clk, Pin miso, Pin mosi) noexce
     SPI::getSSPDevice(dev)->initPins(clk, miso, mosi, NvicPrioritySpi);
 }
 
+#if HAS_SMART_DRIVERS
 static void ConfigureDriveType() noexcept
 {
     // first check to see if we have any explcit settings
@@ -496,6 +499,7 @@ static void ConfigureDriveType() noexcept
     for(size_t i = totalSmartDrivers; i < NumDirectDrivers; i++)
         TMC_DRIVER_TYPE[i] = DriverType::stepdir;
 }
+#endif
 
 static void FatalError(const char* fmt, ...) noexcept
 {

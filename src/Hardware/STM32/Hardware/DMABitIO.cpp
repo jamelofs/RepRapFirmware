@@ -17,6 +17,7 @@
 
 #include "RepRapFirmware.h"
 
+#ifndef __STM32MP1__
 #if SUPPORT_TMC22xx || SUPPORT_DMA_NEOPIXEL
 #include "DMABitIO.h"
 #include "TMC22xx.h"
@@ -441,4 +442,5 @@ extern "C" void DMA2_Stream5_IRQHandler()
     HAL_DMA_IRQHandler(&SUDma);    
 }
 
+#endif
 #endif
