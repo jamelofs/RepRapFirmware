@@ -84,8 +84,18 @@ FLAGS += $(DEBUG_FLAGS)
 FLAGS += -MMD -MP 
 FLAGS += -DSTM32MP157 -DSTM32MP157xx
 FLAGS += -DCORE_CM4 -DUSE_FULL_LL_DRIVER
+# FLAGS += -Os -flto
 
-# FLAGS += -Os -flto -ffunction-sections -fdata-sections
+LDFLAGS = --specs=nosys.specs -Xlinker -z -Xlinker muldefs -Os -Wl,--fatal-warnings -fmerge-all-constants -mfpu=fpv4-sp-d16 
+LDFLAGS += -mfloat-abi=hard -mfp16-format=ieee -mcpu=cortex-m4 -mthumb -fno-math-errno -T$(LINKER_SCRIPT) 
+LDFLAGS += -Wl,-Map,$(BUILD_DIR)/$(OUTPUT_NAME).map -o $(BUILD_DIR)/$(OUTPUT_NAME).elf -Wl,--cref -Wl,--check-sections 
+LDFLAGS += -Wl,--gc-sections,--relax -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common 
+LDFLAGS += -Wl,--warn-unresolved-symbols -Wl,--defsym=LD_MAX_SIZE=1048576 -Wl,--defsym=LD_MAX_DATA_SIZE=196608 
+LDFLAGS += -Wl,--defsym=LD_FLASH_OFFSET=0x0 -Wl,--no-warn-rwx-segment -Wl,--start-group $(RRFLIBC_OBJS) 
+LDFLAGS += -lSTMCore $(RRF_OBJS) $(CANLIB_OBJS) -lRRFLibraries -larm_cortexM4l_math -lc -lm -lgcc -lstdc++ -Wl,--end-group
+LDFLAGS += -Xlinker --strip-all
+LDFLAGS += -Xlinker --print-memory-usage
+# LDFLAGS += -flto
 
 
 ifeq ($(NETWORK), WIFI)
@@ -140,7 +150,6 @@ firmware:  $(BUILD_DIR)/$(OUTPUT_NAME).elf
 coreSTM: $(BUILD_DIR)/core.a
 
 $(BUILD_DIR)/libSTMCore.a: $(CORE_OBJS)
-	@echo $(CPPFLAGS) $(CFLAGS)
 	$(V)$(AR) rcs $@ $(CORE_OBJS)
 	@echo "\nBuilt STMCore\n"
 	
@@ -154,7 +163,7 @@ $(BUILD_DIR)/libRRFLibraries.a: $(RRFLIBRARIES_OBJS)
 $(BUILD_DIR)/$(OUTPUT_NAME).elf: $(BUILD_DIR)/libSTMCore.a $(BUILD_DIR)/libRRFLibraries.a $(CANLIB_OBJS) $(RRFLIBC_OBJS) $(RRF_OBJS)
 	@echo "\nCreating $(OUTPUT_NAME).bin"
 	$(V)$(MKDIR) $(dir $@)
-	$(V)$(LD) -L$(BUILD_DIR)/ -L$(CORE_DIR)/src/STM32/variants/STM32MP157/ -L$(CORE_DIR)/src/STM32/system/CMSIS/CMSIS/DSP/Lib/GCC --specs=nosys.specs -Xlinker -z -Xlinker muldefs -Os -Wl,--fatal-warnings -fmerge-all-constants -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee -mcpu=cortex-m4 -mthumb -fno-math-errno -T$(LINKER_SCRIPT) -Wl,-Map,$(BUILD_DIR)/$(OUTPUT_NAME).map -o $(BUILD_DIR)/$(OUTPUT_NAME).elf -Wl,--cref -Wl,--check-sections -Wl,--gc-sections,--relax -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-unresolved-symbols -Wl,--defsym=LD_MAX_SIZE=1048576 -Wl,--defsym=LD_MAX_DATA_SIZE=196608 -Wl,--defsym=LD_FLASH_OFFSET=0x0 -Wl,--no-warn-rwx-segment -Wl,--start-group $(RRFLIBC_OBJS) -lSTMCore $(RRF_OBJS) $(CANLIB_OBJS) -lRRFLibraries -larm_cortexM4l_math -lc -lm -lgcc -lstdc++ -Wl,--end-group
+	$(V)$(LD) -L$(BUILD_DIR)/ -L$(CORE_DIR)/src/STM32/variants/STM32MP157/ -L$(CORE_DIR)/src/STM32/system/CMSIS/CMSIS/DSP/Lib/GCC $(LDFLAGS)
 	$(V)$(OBJCOPY) --strip-unneeded -O binary $(BUILD_DIR)/$(OUTPUT_NAME).elf $(BUILD_DIR)/$(OUTPUT_NAME).bin
 	$(V)$(SIZE) $(BUILD_DIR)/$(OUTPUT_NAME).elf
 	-@$(MAKE_DIR)/staticMemStats.sh $(BUILD_DIR)/$(OUTPUT_NAME)
