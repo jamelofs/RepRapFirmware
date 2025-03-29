@@ -618,8 +618,10 @@ static bool TryConfig(uint32_t config, bool mount) noexcept
     if (rslt == GCodeResult::ok)
         return true;
     // mount failed, reset the hardware
+    #ifndef USE_SDIO
     if (conf->device != SSPSDIO)
         ((HardwareSPI *)(SPI::getSSPDevice(conf->device)))->disable();
+    #endif
     for (size_t i = 0; i < ARRAY_SIZE(conf->pins); i++)
         pinMode(conf->pins[i], INPUT);    
     sd_mmc_setSSPChannel(0, SSPNONE, NoPin);
@@ -1125,8 +1127,9 @@ void BoardConfig::PrintValue(MessageType mtype, configValueType configType, void
     }
 }
 
-
+#ifndef __STM32MP1__
 extern "C" uint32_t USBReadOverrun;
+#endif
 extern uint32_t _sdata;
 extern uint32_t _estack;
 #if STM32F4
@@ -1265,8 +1268,10 @@ void BoardConfig::Diagnostics(MessageType mtype) noexcept
 #endif
 
     MessageF(mtype, "\n== USB ==\n");
+#ifndef __STM32MP1__
     MessageF(mtype, "Read overrun %d\n", (int)USBReadOverrun);
     USBReadOverrun = 0;
+#endif
 }
 
 //Set a variable from a string using the specified data type

@@ -1127,6 +1127,7 @@ bool Platform::FlushMessages() noexcept
 
 void Platform::Spin() noexcept
 {
+#if 0
 	if (!active)
 	{
 		return;
@@ -1593,7 +1594,7 @@ void Platform::Spin() noexcept
 		logger->Flush(false);
 	}
 #endif
-
+#endif
 }
 
 #if HAS_SMART_DRIVERS

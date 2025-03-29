@@ -155,6 +155,7 @@ SECTIONS
   } >SRAM2_data
 
   __DATA_END = __DATA_ROM + (_edata - _sdata);
+  _firmware_end = _sidata + (_edata - _sdata);
   text_end = ORIGIN(SRAM1_text) + LENGTH(SRAM1_text);
   ASSERT(__DATA_END <= text_end, "region SRAM1_text overflowed with text and data")
 

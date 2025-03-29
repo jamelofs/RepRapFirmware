@@ -346,7 +346,7 @@ extern Pin AuxSerialRxTxPins[NumberSerialPins];
         esp32,
         esp32eth
     );
-    extern NetworkModuleType NetworkModule;
+    extern NetworkModuleType f+;
     extern const char* ModuleFiles[];
     extern Pin EspDataReadyPin;
     extern Pin SamTfrReadyPin;

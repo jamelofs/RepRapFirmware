@@ -85,6 +85,9 @@ FLAGS += -MMD -MP
 FLAGS += -DSTM32MP157 -DSTM32MP157xx
 FLAGS += -DCORE_CM4 -DUSE_FULL_LL_DRIVER
 
+# FLAGS += -Os -flto -ffunction-sections -fdata-sections
+
+
 ifeq ($(NETWORK), WIFI)
         $(info - Networking: ESP WIFI) 
         FLAGS += -DESP8266WIFI -DMQTT_USE_CUSTOM_SOCKET_HANDLE -DMQTTC_PAL_FILE="Networking/MQTT/mqtt_pal.h"

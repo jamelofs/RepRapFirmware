@@ -2,8 +2,9 @@
 #include <RepRapFirmware.h>
 #include <AnalogIn.h>
 #include <AnalogOut.h>
+#ifndef __STM32MP1__
 USBSerial serialUSB;
-
+#endif
 
 
 // Device initialisation

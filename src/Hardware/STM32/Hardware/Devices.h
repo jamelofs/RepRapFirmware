@@ -3,9 +3,9 @@
 
 #include <AsyncSerial.h>
 typedef AsyncSerial UARTClass;
+#ifndef __STM32MP1__
 #define SUPPORT_USB		1		// needed by USBSerial.h
 #include <USBSerial.h>
-#ifndef __STM32MP1__
 extern USBSerial serialUSB;
 #endif
 void DeviceInit() noexcept;
