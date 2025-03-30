@@ -382,14 +382,14 @@ typedef double floatc_t;							// type of matrix element used for calibration
 typedef float floatc_t;								// type of matrix element used for calibration
 #endif
 
-#if SUPPORT_CAN_EXPANSION
+// #if SUPPORT_CAN_EXPANSION
 typedef Bitmap<uint32_t> AxesBitmap;				// Type of a bitmap representing a set of axes, and sometimes extruders too
 typedef Bitmap<uint64_t> InputPortsBitmap;			// Type of a bitmap representing a set of input ports
-#else
-static_assert(MaxAxesPlusExtruders <= 16);			// Make sure we can use a 16-bit bitmap to represent a set of axes/extruders
-typedef Bitmap<uint16_t> AxesBitmap;				// Type of a bitmap representing a set of axes, and sometimes extruders too
-typedef Bitmap<uint32_t> InputPortsBitmap;			// Type of a bitmap representing a set of input ports
-#endif
+// #else
+// static_assert(MaxAxesPlusExtruders <= 16);			// Make sure we can use a 16-bit bitmap to represent a set of axes/extruders
+// typedef Bitmap<uint16_t> AxesBitmap;				// Type of a bitmap representing a set of axes, and sometimes extruders too
+// typedef Bitmap<uint32_t> InputPortsBitmap;			// Type of a bitmap representing a set of input ports
+// #endif
 typedef Bitmap<uint32_t> ExtrudersBitmap;			// Type of a bitmap representing a set of extruder drive numbers
 typedef Bitmap<uint32_t> DriversBitmap;				// Type of a bitmap representing a set of local driver numbers
 typedef Bitmap<uint32_t> FansBitmap;				// Type of a bitmap representing a set of fan numbers
@@ -406,11 +406,11 @@ typedef Bitmap<uint32_t> ParameterLettersBitmap;	// Type of a bitmap representin
 constexpr char HighestAxisLetter = 'f';
 #endif
 
-#if SUPPORT_CAN_EXPANSION
+// #if SUPPORT_CAN_EXPANSION
 typedef Bitmap<uint64_t> SensorsBitmap;
-#else
-typedef Bitmap<uint32_t> SensorsBitmap;
-#endif
+// #else
+// typedef Bitmap<uint32_t> SensorsBitmap;
+// #endif
 
 typedef unsigned int MovementSystemNumber;			// we could use uint8_t for this but using unsigned int may be more efficient
 

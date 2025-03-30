@@ -42,16 +42,20 @@
 # else
 #  error "Processor undfined"
 # endif
-// #elif STM32MP1
-// # define FIRMWARE_NAME "RepRapFirmware for STM32MP1 based Boards"
-// # define DEFAULT_BOARD_TYPE BoardType::Auto
-// # define SUPPORT_CAN_EXPANSION       0
-// # define DUAL_CAN                    0
-// # define SUPPORT_SPICAN              10
-// # define FLASH_DATA_LENGTH (16*1024) //size of the Software Reset Data in Flash
+#elif STM32MP1
+# define FIRMWARE_NAME "RepRapFirmware for STM32MP1 based Boards"
+# define DEFAULT_BOARD_TYPE BoardType::Auto
+# define SUPPORT_CAN_EXPANSION       0
+# define DUAL_CAN                    0
+# define SUPPORT_SPICAN              0
+# define FLASH_DATA_LENGTH (16*1024) //size of the Software Reset Data in Flash
 
-// # define STM_ELECTRONICS_STRING "STM32MP1"
-// # define STM_BOARD_STRING "STM32MP1"
+# define STM_ELECTRONICS_STRING "STM32MP1"
+# define STM_BOARD_STRING "STM32MP1"
+# define IAP_UPDATE_FILE         "stm32f4_iap_SD.bin" //TODO these should be removed
+# define IAP_UPDATE_FILE_SBC     "stm32f4_iap_SBC.bin"
+# define IAP_CAN_LOADER_FILE     "stm32f4_iap_CAN.bin"
+# define IAP_IMAGE_START         0x20018000
 #else
 # define FIRMWARE_NAME "RepRapFirmware for STM32F4 based Boards"
 # define DEFAULT_BOARD_TYPE BoardType::Auto
