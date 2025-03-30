@@ -80,7 +80,7 @@
 #define WIFI_FIRMWARE_FILE  (ModuleFiles[NetworkModule.ToBaseType()])
 #endif
 
-constexpr size_t NumFirmwareUpdateModules = 5;        // 3 modules, plus one for manual upload to WiFi module (module 2 is now unused)
+constexpr size_t NumFirmwareUpdateModules = 2;        // 3 modules, plus one for manual upload to WiFi module (module 2 is now unused)
 
 // Features definition
 #define SUPPORT_OBJECT_MODEL             1
@@ -111,7 +111,7 @@ constexpr size_t NumFirmwareUpdateModules = 5;        // 3 modules, plus one for
 #define SUPPORT_12864_LCD                0
 #define SUPPORT_PROBE_POINTS_FILE        0
 #define SUPPORT_KEEPOUT_ZONES            0
-#define HAS_EMBEDDED_CONFIG              1
+#define HAS_EMBEDDED_CONFIG              0
 #define BOARD_NAME                       (BoardLongName)
 #define BOARD_SHORT_NAME                 (BoardName)
 #define IAP_FIRMWARE_FILE                (iapFirmwareFile)

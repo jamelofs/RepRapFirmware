@@ -40,7 +40,7 @@ namespace StackUsage
 	constexpr uint32_t GetObjectValueUsingTableNumber = 56;
 #endif
 }
-
+#if HAS_MASS_STORAGE
 // Read a character from the text file.
 // If we reach end of line or end of file, set currentCharacter to 0 and set fileFinished to true.
 // Else increment the character count and set currentCharacter to the character we read.
@@ -67,7 +67,7 @@ void LineReader::SkipTabsAndSpaces() noexcept
 		ReadChar();
 	}
 }
-
+#endif
 // These can't be declared locally inside ParseIdentifierExpression because NamedEnum includes static data
 NamedEnum(NamedConstant, unsigned int, _false, iterations, line, _null, pi, _result, _true, input);
 NamedEnum(Function, unsigned int, abs, acos, asin, atan, atan2, ceil, cos, datetime, degrees, exists, exp, fileexists, fileread, floor, isnan, log, max, min, mod, pow, radians, random, sin, sqrt, tan, vector);
@@ -876,6 +876,7 @@ void ExpressionParser::EvaluateMinOrMax(ExpressionValue& v1, ExpressionValue& v2
 	}
 }
 
+#if HAS_MASS_STORAGE
 // Open a text file and read array elements from it.
 // On entry, 'rslt' holds the filename and has type CString or HeapString. On return it holds the result array.
 // Only the first line of the file is read. Possible future extension: allow escape characters in character literals, then allow '\n' as a delimiter.
@@ -1050,7 +1051,7 @@ void ExpressionParser::ReadArrayElementFromFile(ExpressionValue& rslt, LineReade
 		}
 	}
 }
-
+#endif
 // Get another operand, called when evaluating a function after we have evaluate the first operand.
 // We checked the stack for the call to ParseInternal for the first operand, no need to do it again.
 void ExpressionParser::GetNextOperand(ExpressionValue& operand, bool evaluate) THROWS(GCodeException)
@@ -1746,7 +1747,7 @@ void ExpressionParser::ParseIdentifierExpression(ExpressionValue& rslt, bool eva
 					rslt.SetDateTime(val);
 				}
 				break;
-
+#if HAS_MASS_STORAGE
 			case Function::fileexists:
 				ConvertToString(rslt, evaluate);
 				{
@@ -1772,7 +1773,6 @@ void ExpressionParser::ParseIdentifierExpression(ExpressionValue& rslt, bool eva
 					rslt.SetBool(b);
 				}
 				break;
-
 			case Function::fileread:
 				{
 					if (evaluate && rslt.GetType() != TypeCode::CString && rslt.GetType() != TypeCode::HeapString)
@@ -1805,7 +1805,7 @@ void ExpressionParser::ParseIdentifierExpression(ExpressionValue& rslt, bool eva
 					ReadArrayFromFile(rslt, offset, (unsigned int)integerOperand.iVal, delimiterOperand.cVal);
 				}
 				break;
-
+#endif
 			case Function::vector:		// vector(numElements, elementValue)
 				if (evaluate && (rslt.GetType() != TypeCode::Int32 || rslt.iVal < 0))
 				{

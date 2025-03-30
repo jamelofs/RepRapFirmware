@@ -3414,7 +3414,9 @@ void GCodes::StartPrinting(bool fromStart) noexcept
 	{
 		for (MovementState& ms : moveStates)
 		{
+#if HAS_MASS_STORAGE
 			ms.fileOffsetToPrint = 0;
+#endif
 # if SUPPORT_ASYNC_MOVES
 			ms.fileOffsetToSkipTo = 0;
 # endif

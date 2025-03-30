@@ -1419,7 +1419,6 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, const StringRef& reply) THROWS(GCodeEx
 					result = SimulateFile(gb, reply, simFileName.GetRef(), updateFile);
 				}
 				else
-#endif
 				{
 					uint32_t newSimulationMode;
 					gb.TryGetLimitedUIValue('S', newSimulationMode, seen, (uint32_t)SimulationMode::highest + 1);
@@ -1433,6 +1432,7 @@ bool GCodes::HandleMcode(GCodeBuffer& gb, const StringRef& reply) THROWS(GCodeEx
 								(IsSimulating()) ? "on" : "off", (double)reprap.GetMove().GetSimulationTime(), (double)simulationTime);
 					}
 				}
+#endif
 				break;
 			}
 

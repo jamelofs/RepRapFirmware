@@ -1127,7 +1127,6 @@ bool Platform::FlushMessages() noexcept
 
 void Platform::Spin() noexcept
 {
-#if 0
 	if (!active)
 	{
 		return;
@@ -1269,12 +1268,12 @@ void Platform::Spin() noexcept
 			// Check one driver for temperature warning, temperature shutdown etc.
 			if (enableValues[nextDriveToPoll] >= 0)					// don't poll driver if it is flagged "no poll"
 			{
-				StandardDriverStatus stat =
+				StandardDriverStatus stat;
 #if defined(DUET3_MB6XD)
 											// Don't raise driver error events while we are being tested by ATE
-											StandardDriverStatus((!CanInterface::InTestMode() && HasDriverError(nextDriveToPoll)) ? (uint32_t)1u << StandardDriverStatus::ExternDriverErrorBitPos : 0);
-#else
-											SmartDrivers::GetStatus(nextDriveToPoll, true, true);
+				stat = StandardDriverStatus((!CanInterface::InTestMode() && HasDriverError(nextDriveToPoll)) ? (uint32_t)1u << StandardDriverStatus::ExternDriverErrorBitPos : 0);
+#elif HAS_SMART_DRIVERS
+				stat = SmartDrivers::GetStatus(nextDriveToPoll, true, true);
 #endif
 #if HAS_SMART_DRIVERS
 											const DriversBitmap mask = DriversBitmap::MakeFromBits(nextDriveToPoll);
@@ -1593,7 +1592,6 @@ void Platform::Spin() noexcept
 	{
 		logger->Flush(false);
 	}
-#endif
 #endif
 }
 

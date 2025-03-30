@@ -2,7 +2,7 @@
 
 //Wraps RRF "Slot 0" to SDCard on SSP1 (internal SDCard on smoothie)
 //wraps RRF "Slot 1" to SDCard on SSP0
-
+#if HAS_MASS_STORAGE
 #include "RepRapFirmware.h"
 #include "sd_mmc_wrapper.h"
 #if USE_SSP1 || USE_SSP2 || USE_SSP3 || USE_SSP4 || USE_SSP5 || USE_SSP6
@@ -129,3 +129,4 @@ uint32_t sd_mmc_get_interface_speed(uint8_t slot) noexcept
     return 0;
 }
 
+#endif

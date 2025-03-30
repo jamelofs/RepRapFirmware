@@ -14,6 +14,7 @@
 
 class VariableSet;
 
+#if HAS_MASS_STORAGE
 // Small class to read from file, checking for end of line or end of file and counting the characters read
 // We could improve the efficiency by buffering a small number of characters
 class LineReader
@@ -41,7 +42,7 @@ private:
 	char currentCharacter;
 	bool fileFinished;
 };
-
+#endif
 class ExpressionParser
 {
 public:
@@ -104,7 +105,9 @@ private:
 	void BalanceTypes(ExpressionValue& val1, ExpressionValue& val2, bool evaluate) const THROWS(GCodeException);
 	void __attribute__((noinline)) EvaluateMinOrMax(ExpressionValue& v1, ExpressionValue& v2, bool evaluate, bool isMax) const THROWS(GCodeException);
 	void __attribute__((noinline)) ReadArrayFromFile(ExpressionValue& rslt, unsigned int offset, unsigned int length, char delimiter) const THROWS(GCodeException);
+#if HAS_MASS_STORAGE
 	void ReadArrayElementFromFile(ExpressionValue& rslt, LineReader& reader, char delimiter) const THROWS(GCodeException);
+#endif
 	void GetNextOperand(ExpressionValue& operand, bool evaluate) THROWS(GCodeException);
 	void __attribute__((noinline)) ApplyObjectModelArrayIndex(ExpressionValue& rslt, int indexCol, uint32_t indexValue, bool evaluate) THROWS(GCodeException);
 

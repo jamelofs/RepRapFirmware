@@ -100,9 +100,9 @@
 
 #define HAS_AUX_DEVICES			(defined(SERIAL_AUX_DEVICE))		// if SERIAL_AUX_DEVICE is defined then we have one or more aux devices
 
-#ifndef SUPPORT_PANELDUE_FLASH
-# define SUPPORT_PANELDUE_FLASH	HAS_AUX_DEVICES
-#endif
+// #ifndef SUPPORT_PANELDUE_FLASH //Does not work without mass storage
+// # define SUPPORT_PANELDUE_FLASH	HAS_AUX_DEVICES
+// #endif
 
 #ifndef ALLOW_ARBITRARY_PANELDUE_PORT
 # define ALLOW_ARBITRARY_PANELDUE_PORT (0)
@@ -222,7 +222,7 @@
 #endif
 
 #ifndef HAS_MASS_STORAGE
-# define HAS_MASS_STORAGE		1
+# define HAS_MASS_STORAGE		0
 #endif
 
 #ifndef HAS_EMBEDDED_FILES

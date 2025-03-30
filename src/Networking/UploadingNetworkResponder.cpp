@@ -9,8 +9,10 @@
 #include "Socket.h"
 #include <Platform/Platform.h>
 
+#if HAS_MASS_STORAGE
 unsigned UploadingNetworkResponder::numUploads = 0;
 unsigned UploadingNetworkResponder::numUploadErrors = 0;
+#endif
 
 UploadingNetworkResponder::UploadingNetworkResponder(NetworkResponder *n) noexcept : NetworkResponder(n)
 #if HAS_MASS_STORAGE

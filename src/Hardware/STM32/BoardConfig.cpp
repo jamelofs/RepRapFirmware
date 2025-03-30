@@ -598,6 +598,7 @@ static constexpr SDCardConfig SDCardConfigs[] = {
 
 static bool TryConfig(uint32_t config, bool mount) noexcept
 {
+    #if HAS_MASS_STORAGE
     const SDCardConfig *conf = &SDCardConfigs[config];
     if (conf->device != SSPSDIO)
     {
@@ -629,11 +630,13 @@ static bool TryConfig(uint32_t config, bool mount) noexcept
     for (size_t i = 0; i < ARRAY_SIZE(conf->pins); i++)
         pinMode(conf->pins[i], INPUT);    
     sd_mmc_setSSPChannel(0, SSPNONE, NoPin);
+    #endif
     return false;
 }    
 
 static bool LoadBoardDefaults() noexcept
 {
+    #if HAS_MASS_STORAGE
     ClearConfig();
     // Load the configuration from the embedded file system
     if (BoardConfig::LoadBoardConfigFromFile(bootConfigFile, false))
@@ -648,6 +651,7 @@ static bool LoadBoardDefaults() noexcept
 #endif
         return true;
     }
+    #endif
     return false;
 }
 
@@ -687,9 +691,9 @@ void BoardConfig::Init() noexcept
 {
     SSPChannel sdChannel = SSPNONE;
 	String<100> reply;
-#if !HAS_MASS_STORAGE
-#error "Invalid board configuration HAS_MASS_STORAGE is required"
-#endif
+// #if !HAS_MASS_STORAGE //Removing this, no mass storage
+// #error "Invalid board configuration HAS_MASS_STORAGE is required"
+// #endif
 
 #if STARTUP_DELAY
     for(int i = 0; i < STARTUP_DELAY; i++)
@@ -718,6 +722,7 @@ void BoardConfig::Init() noexcept
 #endif
     if (!LoadBoardDefaults())
     {
+#if HAS_MASS_STORAGE
         // On test builds we may not have embedded data. We assume the Sd card is SDIO and
         // look for the config data on the card
         MessageF(UsbMessage, "Embdded board config not found, please check you have the correct firmware file installed.\nAttempting to fall back to SDIO\n");
@@ -727,6 +732,7 @@ void BoardConfig::Init() noexcept
             FatalError("Unable to load board defaults.\n");
         }
         MassStorage::Unmount(0, reply.GetRef());
+#endif
     }
 #if HAS_SBC_INTERFACE
     // See if there is an (optional) config file on the SD card
@@ -760,6 +766,7 @@ void BoardConfig::Init() noexcept
         }
     }
 #else
+#if HAS_MASS_STORAGE
     // Try and mount the sd card and read the board.txt file, error if not present
     sdChannel = InitSDCard(sdConfig, true, true);
     if (sdChannel == SSPNONE)
@@ -772,10 +779,10 @@ void BoardConfig::Init() noexcept
         // failed to load a valid configuration
         MessageF(UsbMessage, "Warning: unable to load board configuration from file\n");
     }
-#endif
     if (MassStorage::IsDriveMounted(0))
         MassStorage::Unmount(0, reply.GetRef());
-
+#endif
+#endif
 #if HAS_SBC_INTERFACE
     if (SbcMode && (SbcCsPinConfig == NoPin || SbcTfrReadyPinConfig == NoPin || SbcSpiChannel == SSPNONE))
     {
@@ -890,10 +897,12 @@ void BoardConfig::Init() noexcept
 #endif
 }
 
+
 // Function to look up a pin name pass back the corresponding index into the pin table
 // On this platform, the mapping from pin names to pins is fixed, so this is a simple lookup
 bool LookupPinName(const char*pn, LogicalPin& lpin, bool& hardwareInverted) noexcept
 {
+    #if HAS_MASS_STORAGE
     if (StringEqualsIgnoreCase(pn, NoPinName) || StringEqualsIgnoreCase(pn, "NoPin"))
     {
         lpin = NoLogicalPin;
@@ -970,12 +979,14 @@ bool LookupPinName(const char*pn, LogicalPin& lpin, bool& hardwareInverted) noex
         hardwareInverted = false;
         return true;
     }
+    #endif
     return false;
 }
 
 // Return the string names associated with a pin
 const char *GetPinNames(LogicalPin lp) noexcept
 {
+    #if HAS_MASS_STORAGE
     static char name[32];
     FileStore * const configFile = MassStorage::OpenFile(pinsConfigFile, OpenMode::read, 0);
     if (configFile == nullptr)
@@ -1020,12 +1031,14 @@ const char *GetPinNames(LogicalPin lp) noexcept
     }
     // Next is very, very iffy, but ok for current usage!
     return (const char *)name;
+    #endif
+    return 0; //TODO
 }
-
 //Convert a pin string into a RRF Pin
 //Handle formats such as A.13, A_13, PA_13 or PA.13
 Pin BoardConfig::StringToPin(const char *strvalue) noexcept
 {
+    #if HAS_MASS_STORAGE
     if(strvalue == nullptr) return NoPin;
     
     if(tolower(*strvalue) == 'p') strvalue++; //skip P
@@ -1052,12 +1065,13 @@ Pin BoardConfig::StringToPin(const char *strvalue) noexcept
             }
         }
     }
-    
+    #endif
     return NoPin;
 }
 
 Pin BoardConfig::LookupPin(char *strvalue) noexcept
 {
+    #if HAS_MASS_STORAGE
     //Lookup a pin by name
     LogicalPin lp;
     bool hwInverted;
@@ -1072,6 +1086,9 @@ Pin BoardConfig::LookupPin(char *strvalue) noexcept
                      
     //pin may not be in the pintable so check if the format is a correct pin (returns NoPin if not)
     return StringToPin(strvalue);
+    #endif
+    Pin retpin;
+    return retpin; //TODO
 }
 
 
@@ -1355,6 +1372,7 @@ void BoardConfig::SetValueFromString(configValueType type, void *variable, char 
     }
 }
 
+#if HAS_MASS_STORAGE
 bool BoardConfig::LoadBoardConfigFromFile(const char *filePath, bool restricted) noexcept
 {
     FileStore * const configFile = MassStorage::OpenFile(filePath, OpenMode::read, 0);
@@ -1418,6 +1436,7 @@ void BoardConfig::InvalidateBoardConfiguration() noexcept
     emptyConfig.saveToBackupRAM();
 }
 #endif
+#endif
 
 static
 const boardConfigEntry_t* FindConfigKey(const char *key)
@@ -1452,6 +1471,7 @@ bool IsValidChar(char c)
     return isalpha(c) || isdigit(c) || c == '.' || c == '_';
 }
 
+#if HAS_MASS_STORAGE
 bool BoardConfig::GetConfigKeys(FileStore * const configFile) noexcept
 {
     constexpr size_t maxLineLength = 120;
@@ -1693,6 +1713,7 @@ bool BoardConfig::GetConfigKeys(FileStore * const configFile) noexcept
     }
     return false;
 }
+#endif
 
 void assert_failed(uint8_t *file, uint32_t line)
 {
