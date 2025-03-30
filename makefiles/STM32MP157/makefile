@@ -94,7 +94,8 @@ LDFLAGS += -Wl,--warn-unresolved-symbols -Wl,--defsym=LD_MAX_SIZE=1048576 -Wl,--
 LDFLAGS += -Wl,--defsym=LD_FLASH_OFFSET=0x0 -Wl,--no-warn-rwx-segment -Wl,--start-group $(RRFLIBC_OBJS) 
 LDFLAGS += -lSTMCore $(RRF_OBJS) $(CANLIB_OBJS) -lRRFLibraries -larm_cortexM4l_math -lc -lm -lgcc -lstdc++ -Wl,--end-group
 # LDFLAGS += -Xlinker --strip-all
-LDFLAGS += -Xlinker --print-memory-usage
+LDFLAGS += -Xlinker --print-memory-usage 
+LDFLAGS += -Wl,-Map=output.map
 # LDFLAGS += -Xlinker -flto
 
 

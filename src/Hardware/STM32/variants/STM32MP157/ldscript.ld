@@ -38,7 +38,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(SRAM2_data) + LENGTH(SRAM2_data); /* end of "SRAM2_data" Ram type memory */
+_estack = ORIGIN(SRAM4_data) + LENGTH(SRAM4_data); /* end of "SRAM4_data" Ram type memory */
 
 _Min_Heap_Size = 0x200; /* required amount of heap */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -47,15 +47,15 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
   RETRAM_interrupts (xrw)  : ORIGIN = 0x00000000,  LENGTH = 0x00000600
-  SRAM1_text        (xrw)  : ORIGIN = 0x10000000,  LENGTH = 512K
-  SRAM2_data        (xrw)  : ORIGIN = 0x10080000,  LENGTH = 128K
-  SRAM3_ipc_shm     (xrw)  : ORIGIN = 0x10100000,  LENGTH = 64K
-  SRAM4             (xrw)  : ORIGIN = 0x10120000,  LENGTH = 64K
+  RETRAM_bss        (xrw)  : ORIGIN = 0x00000600,  LENGTH = 0x00004F00
+  SRAM1234_text     (xrw)  : ORIGIN = 0x10000000,  LENGTH = 0x58000
+  SRAM4_data        (xrw)  : ORIGIN = 0x10058000,  LENGTH = 0x6000
+  SRAM4_ipc_shm     (xrw)  : ORIGIN = 0x1005E000,  LENGTH = 0x2000
 }
 
 /* Symbols needed for OpenAMP to enable rpmsg */
-__OPENAMP_region_start__ = ORIGIN(SRAM3_ipc_shm);
-__OPENAMP_region_end__   = ORIGIN(SRAM3_ipc_shm) + LENGTH(SRAM3_ipc_shm);
+__OPENAMP_region_start__ = ORIGIN(SRAM4_ipc_shm);
+__OPENAMP_region_end__   = ORIGIN(SRAM4_ipc_shm) + LENGTH(SRAM4_ipc_shm);
 
 /* Sections */
 SECTIONS
@@ -68,7 +68,7 @@ SECTIONS
     . = ALIGN(4);
   } >RETRAM_interrupts
 
-  /* The program code and other data into "SRAM1_text" Ram type memory */
+  /* The program code and other data into "SRAM1234_text" Ram type memory */
   .text :
   {
     . = ALIGN(4);
@@ -83,23 +83,23 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >SRAM1_text
+  } >SRAM1234_text
 
-  /* Constant data into "SRAM1_text" Ram type memory */
+  /* Constant data into "SRAM1234_text" Ram type memory */
   .rodata :
   {
     . = ALIGN(4);
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >SRAM1_text
+  } >SRAM1234_text
 
   .ARM.extab (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
-  } >SRAM1_text
+  } >SRAM1234_text
   .ARM (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(4);
@@ -107,7 +107,7 @@ SECTIONS
     *(.ARM.exidx*)
     __exidx_end = .;
     . = ALIGN(4);
-  } >SRAM1_text
+  } >SRAM1234_text
 
   .preinit_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -116,7 +116,7 @@ SECTIONS
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
-  } >SRAM1_text
+  } >SRAM1234_text
 
   .init_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -126,7 +126,7 @@ SECTIONS
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
-  } >SRAM1_text
+  } >SRAM1234_text
 
   .fini_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -136,13 +136,13 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
-  } >SRAM1_text
+  } >SRAM1234_text
 
   /* Used by the startup to initialize data */
   __DATA_ROM = .;
   _sidata = LOADADDR(.data);
 
-  /* Initialized data sections into "SRAM2_data" Ram type memory */
+  /* Initialized data sections into "SRAM4_data" Ram type memory */
   .data :  AT(__DATA_ROM)
   {
     . = ALIGN(4);
@@ -152,12 +152,12 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >SRAM2_data
+  } >SRAM4_data
 
   __DATA_END = __DATA_ROM + (_edata - _sdata);
   _firmware_end = _sidata + (_edata - _sdata);
-  text_end = ORIGIN(SRAM1_text) + LENGTH(SRAM1_text);
-  ASSERT(__DATA_END <= text_end, "region SRAM1_text overflowed with text and data")
+  text_end = ORIGIN(SRAM1234_text) + LENGTH(SRAM1234_text);
+  ASSERT(__DATA_END <= text_end, "region SRAM1234_text overflowed with text and data")
 
 
   .resource_table :
@@ -165,9 +165,9 @@ SECTIONS
     . = ALIGN(4);
     KEEP (*(.resource_table*))
     . = ALIGN(4);
-  } >SRAM2_data
+  } >SRAM4_data
 
-  /* Uninitialized data section into "SRAM2_data" Ram type memory */
+  /* Uninitialized data section into "RETRAM_bss" Ram type memory */
   . = ALIGN(4);
   .bss :
   {
@@ -181,9 +181,9 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >SRAM2_data
+  } >RETRAM_bss
 
-  /* User_heap_stack section, used to check that there is enough "SRAM2_data" Ram  type memory left */
+  /* User_heap_stack section, used to check that there is enough "SRAM4_data" Ram  type memory left */
   ._user_heap_stack :
   {
     . = ALIGN(8);
@@ -192,7 +192,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >SRAM2_data
+  } >SRAM4_data
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :
