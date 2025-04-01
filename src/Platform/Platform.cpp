@@ -4165,6 +4165,7 @@ void Platform::SetBoardType() noexcept
 	board = BoardType::Stm32H7;
 #elif defined(__STM32MP1__)
 	board = BoardType::Stm32MP1;
+	DiagPin = PH_7;
 #else
 # error Undefined board type
 #endif

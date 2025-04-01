@@ -8,7 +8,7 @@ RRFLIBRARIES_DIR ?= ./RRFLibraries
 CORESTM_DIR ?= ./CoreN2G
 CANLIB_DIR ?= CANlib
 OUTPUT_NAME ?= base_stm32mp157
-BUILD := 
+BUILD := Debug
 
 NETWORK ?= SBC
 

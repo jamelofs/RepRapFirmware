@@ -10,8 +10,8 @@ USBSerial serialUSB;
 // Device initialisation
 void DeviceInit() noexcept
 {
-	LegacyAnalogIn::AnalogInInit();
-	AnalogOut::Init();
+	// LegacyAnalogIn::AnalogInInit();
+	// AnalogOut::Init();
 
 }
 

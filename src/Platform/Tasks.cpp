@@ -149,8 +149,9 @@ void *Tasks::GetNVMBuffer(const uint32_t *_ecv_array null stk) noexcept
 		pinMode(UsbModePin, OUTPUT_LOW);									// USB mode = device/UFP
 	}
 #endif
-	pinMode(DiagPin, (DiagOnPolarity) ? OUTPUT_LOW : OUTPUT_HIGH);			// set up status LED for debugging and turn it off
-#if defined(DUET3MINI) || defined(DUET3_MB6HC) || defined(DUET3_MB6XD)
+	// pinMode(DiagPin, (DiagOnPolarity) ? OUTPUT_LOW : OUTPUT_HIGH);			// set up status LED for debugging and turn it off
+	pinMode(DiagPin, OUTPUT_HIGH);			 //Turn it on
+	#if defined(DUET3MINI) || defined(DUET3_MB6HC) || defined(DUET3_MB6XD)
 	pinMode(ActLedPin, (ActOnPolarity) ? OUTPUT_LOW : OUTPUT_HIGH);			// set up activity LED and turn it off
 #endif
 
